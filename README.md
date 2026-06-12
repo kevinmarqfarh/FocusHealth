@@ -16,7 +16,7 @@ npm run dev            # http://localhost:5173
 `.env` (redan ifylld lokalt, committas aldrig):
 
 ```
-VITE_SUPABASE_URL=https://syzqmegrjfwijihrdxwr.supabase.co
+VITE_SUPABASE_URL=https://bqudyrnjvbhwtevxorwp.supabase.co
 VITE_SUPABASE_ANON_KEY=<anon public key>
 ```
 
