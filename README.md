@@ -29,29 +29,25 @@ Anon-nyckeln + Row Level Security är säker att skicka till klienten.
   omedelbar UI och offline, upsert till Supabase i bakgrunden. Vid appstart
   synkas rader (senaste `updated_at` vinner) → samma data på iPhone och iPad.
 - **`src/supabaseClient.js`** — Supabase-klient med persistent session.
-- **`src/App.jsx`** — magic-link auth-gate.
+- **`src/App.jsx`** — auth-gate (e-post + lösenord).
+- **`src/Auth.jsx`** — inloggning/skapa konto med lösenord.
 - **`src/FocusHealth.jsx`** — UI:t (lagren Idag + Översikt).
 - **`supabase/migrations/0001_init.sql`** — `focushealth_kv`-tabell + RLS.
 
-## ⚠️ Ett manuellt steg krävs (Supabase auth-redirect)
+## Inloggning (e-post + lösenord)
 
-För att magic-link-mejlen ska landa rätt måste appens URL:er finnas i Supabase
-redirect-allowlistan. Detta går inte att sätta via CLI utan en access token, så
-gör det en gång i dashboarden:
+Privat projekt → lösenordsbaserad inloggning, ingen magic-link. Skapa kontot en
+gång via **Skapa konto**; sessionen sparas sedan på enheten.
 
-**Supabase → Authentication → URL Configuration**
+**Rekommenderat (slipp bekräftelsemejl):** stäng av e-postbekräftelse så att
+kontoskapande loggar in direkt:
 
-- **Site URL:** `https://focushealth.vercel.app`
-- **Redirect URLs** (lägg till alla tre):
-  - `https://focushealth.vercel.app`
-  - `https://focushealth-*.vercel.app` (preview-deployer)
-  - `http://localhost:5173` (lokal utveckling)
+**Supabase → AppDB → Authentication → Sign In / Providers → Email** → slå av
+**"Confirm email"** → Spara.
 
-Spara. Därefter fungerar inloggning på både prod och lokalt.
-
-> Free-tier skickar mejl via Supabases delade avsändare (några/timme) och kan
-> hamna i skräpposten första gången. För skarpare leverans: koppla egen SMTP
-> under Authentication → Emails.
+Om du hellre behåller bekräftelse på: sätt **Site URL** till
+`https://focushealth.vercel.app` under Authentication → URL Configuration, så
+landar bekräftelselänken rätt. Bekräfta en gång, sedan räcker lösenordet.
 
 ## Lägg till på hemskärmen (iPhone / iPad)
 
