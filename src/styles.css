@@ -138,8 +138,19 @@ input {
 .auth button[disabled] {
   opacity: 0.6;
 }
+.auth-switch {
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 8px 0 0;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 .auth-hint {
-  margin-top: 14px;
+  margin-top: 10px;
   font-size: 12.5px;
   line-height: 1.5;
 }
