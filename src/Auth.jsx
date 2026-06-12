@@ -26,7 +26,7 @@ export default function Auth() {
   return (
     <div className="auth">
       <div className="auth-card">
-        <div className="auth-mark">FOCUSHEALTH</div>
+        <div className="auth-mark">FocusHealth</div>
         <div className="auth-sub">Energi &amp; mental klarhet</div>
 
         {status === 'sent' ? (

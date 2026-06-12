@@ -32,7 +32,7 @@ export default function App() {
   if (loading) {
     return (
       <div className="boot">
-        <div className="boot-mark">FOCUSHEALTH</div>
+        <div className="boot-mark">FocusHealth</div>
       </div>
     )
   }

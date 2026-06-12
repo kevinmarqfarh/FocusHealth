@@ -40,51 +40,10 @@ const emptyDay = () => ({
 })
 
 /* ---------- små UI-delar ---------- */
-function TickMeter({ value, max }) {
-  // Bezel-mätare: max ticks runt en 270°-båge, value st i guld.
-  const size = 132
-  const c = size / 2
-  const r = 52
-  const startAngle = 135
-  const sweep = 270
-  const ticks = Array.from({ length: max }, (_, i) => {
-    const a = ((startAngle + (sweep / (max - 1)) * i) * Math.PI) / 180
-    const inner = r - 9
-    const outer = r
-    return {
-      x1: c + inner * Math.cos(a),
-      y1: c + inner * Math.sin(a),
-      x2: c + outer * Math.cos(a),
-      y2: c + outer * Math.sin(a),
-      on: i < value,
-    }
-  })
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="tickmeter">
-      {ticks.map((t, i) => (
-        <line
-          key={i}
-          x1={t.x1}
-          y1={t.y1}
-          x2={t.x2}
-          y2={t.y2}
-          className={t.on ? 'tick on' : 'tick'}
-        />
-      ))}
-      <text x={c} y={c - 2} className="tick-value">
-        {value}
-      </text>
-      <text x={c} y={c + 18} className="tick-max">
-        / {max}
-      </text>
-    </svg>
-  )
-}
-
 function Sparkline({ data, min, max, color }) {
   const w = 240
   const h = 44
-  const pad = 4
+  const pad = 5
   const span = max - min || 1
   const pts = data.map((v, i) => {
     const x = pad + (i * (w - pad * 2)) / (data.length - 1)
@@ -92,7 +51,6 @@ function Sparkline({ data, min, max, color }) {
     const y = h - pad - ((v - min) / span) * (h - pad * 2)
     return `${x.toFixed(1)},${y.toFixed(1)}`
   })
-  // bygg segment som hoppar över null (gap)
   const segments = []
   let cur = []
   pts.forEach((p) => {
@@ -101,24 +59,28 @@ function Sparkline({ data, min, max, color }) {
     } else cur.push(p)
   })
   if (cur.length) segments.push(cur)
-  const lastIdx = [...pts].map((p, i) => (p ? i : -1)).filter((i) => i >= 0).pop()
+  const lastIdx = pts.map((p, i) => (p ? i : -1)).filter((i) => i >= 0).pop()
   const last = lastIdx != null ? pts[lastIdx] : null
   return (
-    <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} className="sparkline" preserveAspectRatio="none">
+    <svg
+      width="100%"
+      height={h}
+      viewBox={`0 0 ${w} ${h}`}
+      className="sparkline"
+      preserveAspectRatio="none"
+    >
       {segments.map((seg, i) => (
         <polyline
           key={i}
           points={seg.join(' ')}
           fill="none"
           stroke={color}
-          strokeWidth="2"
+          strokeWidth="2.5"
           strokeLinejoin="round"
           strokeLinecap="round"
         />
       ))}
-      {last && (
-        <circle cx={last.split(',')[0]} cy={last.split(',')[1]} r="2.6" fill={color} />
-      )}
+      {last && <circle cx={last.split(',')[0]} cy={last.split(',')[1]} r="3" fill={color} />}
     </svg>
   )
 }
@@ -144,22 +106,14 @@ function Stepper({ value, onChange, min = 35, max = 110 }) {
   const v = value ?? 60
   return (
     <div className="stepper">
-      <button
-        className="step-btn"
-        onClick={() => onChange(Math.max(min, v - 1))}
-        aria-label="Minska"
-      >
+      <button className="step-btn" onClick={() => onChange(Math.max(min, v - 1))} aria-label="Minska">
         −
       </button>
-      <div className="step-value">
-        {value == null ? '–' : value}
+      <div className="step-value num">
+        {value == null ? <span className="empty-dash">–</span> : value}
         <span className="step-unit">bpm</span>
       </div>
-      <button
-        className="step-btn"
-        onClick={() => onChange(Math.min(max, v + 1))}
-        aria-label="Öka"
-      >
+      <button className="step-btn" onClick={() => onChange(Math.min(max, v + 1))} aria-label="Öka">
         +
       </button>
     </div>
@@ -257,27 +211,24 @@ export default function FocusHealth({ session }) {
   const day = { ...emptyDay(), ...days[tKey] }
   const focusLine = DAILY_FOCUS[dayOfYear(today) % DAILY_FOCUS.length]
   const weekType = weeks[wKey]?.type || 'barnfri'
+  const weekTypeLabel = weekType === 'barn' ? 'Barnvecka' : 'Barnfri'
   const passGoal = weekType === 'barn' ? 2 : 4
 
-  // Slutförandemätare: 4 tillskott + energi + vilopuls + klarhet = 7.
+  // Slutförande: 4 tillskott + energi + vilopuls + klarhet = 7.
   const completion =
     SUPPLEMENTS.filter((s) => day.supplements?.[s.id]).length +
     (day.energy != null ? 1 : 0) +
     (day.resting != null ? 1 : 0) +
     (day.clarity != null ? 1 : 0)
 
-  // Pass denna vecka (Vila räknas inte).
   const weekDayKeys = useMemo(() => {
-    return Array.from({ length: 7 }, (_, i) => {
-      const monday = addDays(today, -(((today.getDay() + 6) % 7)))
-      return dateKey(addDays(monday, i))
-    })
+    const monday = addDays(today, -((today.getDay() + 6) % 7))
+    return Array.from({ length: 7 }, (_, i) => dateKey(addDays(monday, i)))
   }, [tKey])
-  const passDoneRaw = weekDayKeys.filter((k) => {
+  const passDone = weekDayKeys.filter((k) => {
     const w = days[k]?.workout
     return w && w !== 'vila'
   }).length
-  const passDone = passDoneRaw
 
   /* ---- statistik för Översikt ---- */
   const range = useMemo(() => last14(), [tKey])
@@ -295,12 +246,11 @@ export default function FocusHealth({ session }) {
       (dd.clarity != null ? 1 : 0)
     )
   }
-  // Streak: bakåt från idag (idag räknas om påbörjad), dagar med score ≥ 5.
   let streak = 0
   for (let i = 0; i < 365; i++) {
     const k = dateKey(addDays(today, -i))
     if (dayScore(k) >= 5) streak++
-    else if (i === 0 && dayScore(k) === 0) continue // idag inte påbörjad ännu
+    else if (i === 0 && dayScore(k) === 0) continue
     else break
   }
 
@@ -308,8 +258,12 @@ export default function FocusHealth({ session }) {
     const xs = arr.filter((v) => v != null)
     return xs.length ? (xs.reduce((a, b) => a + b, 0) / xs.length).toFixed(1) : '–'
   }
-  const energy7 = avg(range.slice(-7).map((k) => days[k]?.energy ?? null))
-  const clarity7 = avg(range.slice(-7).map((k) => days[k]?.clarity ?? null))
+  const last7 = range.slice(-7)
+  const energy7 = avg(last7.map((k) => days[k]?.energy ?? null))
+  const clarity7 = avg(last7.map((k) => days[k]?.clarity ?? null))
+  const resting7 = avg(last7.map((k) => days[k]?.resting ?? null))
+
+  const statVal = (v) => (v === '–' ? <span className="empty-dash">–</span> : v)
 
   const dateLabel = today.toLocaleDateString('sv-SE', {
     weekday: 'long',
@@ -320,7 +274,7 @@ export default function FocusHealth({ session }) {
   if (!loaded) {
     return (
       <div className="boot">
-        <div className="boot-mark">FOCUSHEALTH</div>
+        <div className="boot-mark">FocusHealth</div>
       </div>
     )
   }
@@ -329,8 +283,8 @@ export default function FocusHealth({ session }) {
     <div className="app">
       <header className="topbar">
         <div className="brand">
-          <span className="brand-name">FOCUSHEALTH</span>
-          <span className="brand-date">{dateLabel}</span>
+          <span className="brand-dot" />
+          <span className="brand-name">FocusHealth</span>
         </div>
         <button className="signout" onClick={() => supabase.auth.signOut()}>
           Logga ut
@@ -338,10 +292,7 @@ export default function FocusHealth({ session }) {
       </header>
 
       <nav className="tabs">
-        <button
-          className={'tab' + (view === 'idag' ? ' active' : '')}
-          onClick={() => setView('idag')}
-        >
+        <button className={'tab' + (view === 'idag' ? ' active' : '')} onClick={() => setView('idag')}>
           Idag
         </button>
         <button
@@ -354,53 +305,27 @@ export default function FocusHealth({ session }) {
 
       {view === 'idag' ? (
         <main className="grid">
-          {/* Daglig fokusrad */}
-          <section className="card focus-card span-2">
+          {/* Gradient-hero */}
+          <section className="hero">
+            <div className="hero-kicker">{dateLabel}</div>
+            <div className="hero-num">
+              {completion}
+              <span className="hero-den">/7</span>
+            </div>
+            <div className="hero-sub">uppgifter klara idag</div>
+            <div className="hero-divider" />
+            <div className="hero-foot">
+              <div className="hero-foot-num">
+                {passDone}/{passGoal}
+              </div>
+              <div className="hero-foot-label">pass denna vecka · {weekTypeLabel}</div>
+            </div>
+          </section>
+
+          {/* Dagens fokus */}
+          <section className="card span-2">
             <div className="card-kicker">Dagens fokus</div>
             <div className="focus-line">{focusLine}</div>
-          </section>
-
-          {/* Slutförande + pass */}
-          <section className="card meter-card">
-            <div className="card-kicker">Idag</div>
-            <TickMeter value={completion} max={7} />
-            <div className="meter-foot">
-              <div>
-                <span className="big-num">{passDone}</span>
-                <span className="muted"> / {passGoal} pass</span>
-              </div>
-              <div className="muted small">{weekType === 'barn' ? 'Barnvecka' : 'Barnfri'}</div>
-            </div>
-          </section>
-
-          {/* Veckotyp + träning */}
-          <section className="card">
-            <div className="card-kicker">Träning</div>
-            <div className="weektype">
-              <button
-                className={'seg' + (weekType === 'barn' ? ' active' : '')}
-                onClick={() => setWeekType('barn')}
-              >
-                Barnvecka · 2
-              </button>
-              <button
-                className={'seg' + (weekType === 'barnfri' ? ' active' : '')}
-                onClick={() => setWeekType('barnfri')}
-              >
-                Barnfri · 4
-              </button>
-            </div>
-            <div className="workout-grid">
-              {WORKOUTS.map((w) => (
-                <button
-                  key={w.id}
-                  className={'workout' + (day.workout === w.id ? ' active' : '')}
-                  onClick={() => patchDay({ workout: day.workout === w.id ? null : w.id })}
-                >
-                  {w.label}
-                </button>
-              ))}
-            </div>
           </section>
 
           {/* Tillskott */}
@@ -416,7 +341,7 @@ export default function FocusHealth({ session }) {
                     onClick={() => toggleSupplement(s.id)}
                     aria-pressed={on}
                   >
-                    <span className={'check' + (on ? ' on' : '')}>{on ? '✓' : ''}</span>
+                    <span className="check">{on ? '✓' : ''}</span>
                     <span className="supp-text">
                       <span className="supp-label">{s.label}</span>
                       <span className="supp-dose">{s.dose}</span>
@@ -427,48 +352,89 @@ export default function FocusHealth({ session }) {
             </div>
           </section>
 
-          {/* Morgon */}
+          {/* Energi */}
           <section className="card">
-            <div className="card-kicker">Morgon</div>
-            <div className="field-label">Energi 1–10</div>
+            <div className="card-kicker">Energi · morgon</div>
             <ScaleChips value={day.energy} onChange={(v) => patchDay({ energy: v })} />
-            <div className="field-label mt">Vilopuls</div>
+          </section>
+
+          {/* Klarhet */}
+          <section className="card">
+            <div className="card-kicker">Klarhet · kväll</div>
+            <ScaleChips value={day.clarity} onChange={(v) => patchDay({ clarity: v })} />
+          </section>
+
+          {/* Vilopuls */}
+          <section className="card span-2">
+            <div className="card-kicker">Vilopuls</div>
             <Stepper value={day.resting} onChange={(v) => patchDay({ resting: v })} />
           </section>
 
-          {/* Kväll */}
-          <section className="card">
-            <div className="card-kicker">Kväll</div>
-            <div className="field-label">Klarhet 1–10</div>
-            <ScaleChips value={day.clarity} onChange={(v) => patchDay({ clarity: v })} />
+          {/* Träning */}
+          <section className="card span-2">
+            <div className="card-kicker">Träning</div>
+            <div className="weektype">
+              <button
+                className={'seg' + (weekType === 'barn' ? ' active' : '')}
+                onClick={() => setWeekType('barn')}
+              >
+                Barnvecka · 2 pass
+              </button>
+              <button
+                className={'seg' + (weekType === 'barnfri' ? ' active' : '')}
+                onClick={() => setWeekType('barnfri')}
+              >
+                Barnfri · 4 pass
+              </button>
+            </div>
+            <div className="workout-grid">
+              {WORKOUTS.map((w) => (
+                <button
+                  key={w.id}
+                  className={'workout' + (day.workout === w.id ? ' active' : '')}
+                  onClick={() => patchDay({ workout: day.workout === w.id ? null : w.id })}
+                >
+                  {w.label}
+                </button>
+              ))}
+            </div>
           </section>
         </main>
       ) : (
         <main className="grid">
-          {/* Nyckeltal */}
-          <section className="card span-2">
-            <div className="card-kicker">Nyckeltal</div>
-            <div className="kpis">
-              <div className="kpi">
-                <div className="kpi-num">{streak}</div>
-                <div className="kpi-label">dagar i rad</div>
+          {/* Gradient-hero: streak */}
+          <section className="hero">
+            <div className="hero-kicker">Översikt</div>
+            <div className="hero-num">{streak}</div>
+            <div className="hero-sub">dagar i rad</div>
+            <div className="hero-divider" />
+            <div className="hero-foot">
+              <div className="hero-foot-num">
+                {passDone}/{passGoal}
               </div>
-              <div className="kpi">
-                <div className="kpi-num">
-                  {passDone}
-                  <span className="muted">/{passGoal}</span>
-                </div>
-                <div className="kpi-label">pass denna vecka</div>
-              </div>
-              <div className="kpi">
-                <div className="kpi-num">{energy7}</div>
-                <div className="kpi-label">energi 7 dgr</div>
-              </div>
-              <div className="kpi">
-                <div className="kpi-num">{clarity7}</div>
-                <div className="kpi-label">klarhet 7 dgr</div>
-              </div>
+              <div className="hero-foot-label">pass denna vecka</div>
             </div>
+          </section>
+
+          {/* KPI-bento */}
+          <section className="card">
+            <div className="kpi-num num">{statVal(energy7)}</div>
+            <div className="kpi-label">energi · 7 dgr</div>
+          </section>
+          <section className="card">
+            <div className="kpi-num num">{statVal(clarity7)}</div>
+            <div className="kpi-label">klarhet · 7 dgr</div>
+          </section>
+          <section className="card">
+            <div className="kpi-num num">
+              {passDone}
+              <span className="kpi-den">/{passGoal}</span>
+            </div>
+            <div className="kpi-label">pass denna vecka</div>
+          </section>
+          <section className="card">
+            <div className="kpi-num num">{statVal(resting7)}</div>
+            <div className="kpi-label">vilopuls · 7 dgr</div>
           </section>
 
           {/* Sparklines */}
@@ -476,22 +442,22 @@ export default function FocusHealth({ session }) {
             <div className="card-kicker">14 dagar</div>
             <div className="trend">
               <div className="trend-row">
-                <span className="trend-label" style={{ color: '#C9A227' }}>
+                <span className="trend-label" style={{ color: '#ff4f2c' }}>
                   Energi
                 </span>
-                <Sparkline data={energySeries} min={1} max={10} color="#C9A227" />
+                <Sparkline data={energySeries} min={1} max={10} color="#ff4f2c" />
               </div>
               <div className="trend-row">
-                <span className="trend-label" style={{ color: '#9DB4C0' }}>
+                <span className="trend-label" style={{ color: '#5566ff' }}>
                   Klarhet
                 </span>
-                <Sparkline data={claritySeries} min={1} max={10} color="#9DB4C0" />
+                <Sparkline data={claritySeries} min={1} max={10} color="#5566ff" />
               </div>
               <div className="trend-row">
-                <span className="trend-label" style={{ color: '#C98A8A' }}>
+                <span className="trend-label" style={{ color: '#ff2e86' }}>
                   Vilopuls
                 </span>
-                <Sparkline data={restingSeries} min={40} max={90} color="#C98A8A" />
+                <Sparkline data={restingSeries} min={40} max={90} color="#ff2e86" />
               </div>
             </div>
           </section>
@@ -513,8 +479,12 @@ export default function FocusHealth({ session }) {
         </main>
       )}
 
-      <footer className="footer muted small">
-        {session.user.email} · synkad mellan dina enheter
+      <footer className="footer">
+        <span className="footer-brand">
+          <span className="brand-dot" />
+          FocusHealth
+        </span>
+        <span className="muted">{session.user.email}</span>
       </footer>
     </div>
   )
