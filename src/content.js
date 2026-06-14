@@ -1,11 +1,11 @@
-// Allt textinnehåll för "Fördjupning" och dagliga fokusrader.
-// Evidensraden (italic, guld) lär ut VARFÖR.
+// Text- och datainnehåll för FocusHealth.
+// Källor är valda som praktiska stöd för uthållighet, mental klarhet och återhämtning.
 
 export const SUPPLEMENTS = [
-  { id: 'creatine', label: 'Kreatin', dose: '5 g' },
-  { id: 'omega3', label: 'Omega-3', dose: '2 kaps med mat' },
-  { id: 'd3', label: 'D3', dose: '2500 IE' },
-  { id: 'magnesium', label: 'Magnesium', dose: '2 kaps kväll' },
+  { id: 'creatine', label: 'Kreatin', dose: '3-5 g' },
+  { id: 'omega3', label: 'Omega-3', dose: 'EPA/DHA med mat' },
+  { id: 'd3', label: 'D3', dose: 'okt-mar i Sverige' },
+  { id: 'magnesium', label: 'Magnesium', dose: 'kväll' },
 ]
 
 export const WORKOUTS = [
@@ -17,160 +17,674 @@ export const WORKOUTS = [
   { id: 'vila', label: 'Vila' },
 ]
 
-// Roterande evidensbaserade mikroinstruktioner (en per dag).
-export const DAILY_FOCUS = [
-  'Drick ett stort glas vatten innan första kaffet.',
-  'Gå ut i dagsljus inom 30 minuter efter att du vaknat.',
-  'Ät protein och grönt före kolhydraterna på lunchen.',
-  'Ta en 10-minuterspromenad efter lunch — flackare blodsocker.',
-  'Lägg telefonen utanför sovrummet ikväll.',
-  'Andas i fyrkant 4-4-4-4 i två minuter före ett tufft möte.',
-  'Sikta på samma läggtid som igår — rytmen slår längden.',
-  'Stå upp och rör dig två minuter varje timme idag.',
-  'Sista kaffet senast tio timmar före läggdags.',
-  'Tugga långsammare på lunchen — mättnaden hinner ikapp.',
-  'Två minuters kall avslutning i duschen för skärpa.',
-  'Skriv ned dagens tre viktigaste innan du öppnar mejlen.',
-  'Dämpa ljuset hemma två timmar innan du ska sova.',
-  'Lägg ett styrkepass nära ett måltidstillfälle idag.',
+export const QUICK_WORKOUT_TYPES = [
+  { id: 'styrka', label: 'Styrka' },
+  { id: 'zon2', label: 'Zon 2' },
+  { id: 'intervaller', label: 'Intervaller' },
+  { id: 'lopning', label: 'Löpning' },
+  { id: 'sport', label: 'Sport' },
 ]
 
-// Kunskapsbiblioteket — varje sektion har block med korta rader + evidensrad.
-export const LIBRARY = [
+export const WORKOUT_DURATIONS = [30, 45, 60, 75]
+
+export const EFFORT_LEVELS = [
+  { value: 1, label: 'Lätt' },
+  { value: 2, label: 'Kontroll' },
+  { value: 3, label: 'Stabilt' },
+  { value: 4, label: 'Hårt' },
+  { value: 5, label: 'Max' },
+]
+
+export const DAILY_FOCUS = [
+  'Dagsljus tidigt, proteinrik frukost och dagens viktigaste uppgift innan notiser.',
+  'Planera lunch så att protein och grönsaker kommer före snabba kolhydrater.',
+  'Lägg ett lugnt zon 2-pass eller 30 min rask promenad i kalendern.',
+  'Sista koffeinet tidigt nog för att skydda djupsömn och morgonenergi.',
+  'Skriv ned kvällens nedvarvning innan arbetsdagen är slut.',
+  'Drick vatten och salta maten lätt om passet är svettigt eller långt.',
+  'Välj en måltid som gör morgondagens träning enklare, inte bara dagens hunger nöjd.',
+  'Gå 10 minuter efter lunch för jämnare energi.',
+  'Gör inköp efter mål: proteinbas, fiberrika kolhydrater, färgstarka växter.',
+  'Skärma av 60 minuter före sömn och förbered första glaset vatten till morgonen.',
+]
+
+export const FOOD_TIERS = [
   {
-    id: 'traning',
-    title: 'Träning',
-    blocks: [
-      {
-        heading: 'Träningsveckan',
-        lines: [
-          'Barnfri vecka: 4 pass. Barnvecka: 2 pass (kvalitet före kvantitet).',
-          'Mån — Zon 2, 45–60 min lugnt (kan prata, puls 60–70 % av max).',
-          'Tis — Styrka helkropp: 3 baslyft, 3×5–8 reps.',
-          'Tors — Intervaller: 4×4 min hårt / 3 min lätt mellan.',
-          'Lör — Längre Zon 2 eller sport.',
-          'Övriga dagar vila; promenad och vardagsrörelse räknas alltid.',
-        ],
-        evidence:
-          'Zon 2 bygger den aeroba basen och mitokondrierna; 4×4-intervaller höjer VO₂max mest per minut (Helgerud 2007).',
-      },
-      {
-        heading: 'Styrkans baslyft',
-        lines: [
-          'Knäböj, marklyft, bänk/press, rodd — rotera så alla mönster täcks.',
-          'Lägg 1–2 reps i reserv. Progressiv ökning vecka för vecka.',
-        ],
-        evidence:
-          'Att träna nära men inte till failure ger nästan samma hypertrofi med mindre trötthet (Grgic 2022).',
-      },
+    id: 'budget',
+    label: 'Budget',
+    price: 'ca 65-90 kr/dag',
+    focus: 'Maximal nytta per krona',
+    items: [
+      'Havregryn, potatis, ris och fullkornspasta',
+      'Ägg, kvarg/skyr, fryst kyckling, tonfisk och linser',
+      'Frysta blåbär, broccoli, spenat och rotfrukter',
+      'Rapsolja, jordnötssmör och enkla nötmixar',
     ],
   },
   {
-    id: 'kost',
-    title: 'Kost & Näring',
-    blocks: [
-      {
-        heading: 'Dygnsschema',
-        lines: [
-          '07:00 Frukost — protein + långsamma kolhydrater + omega-3.',
-          '12:30 Lunch — enligt lunchprotokollet nedan.',
-          '15:00 Mellanmål — frukt + nötter eller proteinyoghurt.',
-          '19:00 Middag — protein + grönt + nyttiga fetter, lättare kolhydrater.',
-          '21:30 Magnesium, nedtrappning, skärmar av.',
-        ],
-        evidence:
-          'Regelbundna måltidstider stabiliserar dygnsrytm och aptitreglering (Manoogian 2022).',
-      },
-      {
-        heading: 'Lunchprotokollet',
-        lines: [
-          'Ät i ordning: protein → grönsaker → kolhydrater sist.',
-          '10 minuters promenad direkt efter lunch.',
-          'Mål: ingen eftermiddagsdipp kl 14–15.',
-        ],
-        evidence:
-          'Protein och grönt före kolhydrater sänker blodsockertoppen ~30 % och dämpar eftermiddagströttheten (Shukla 2015).',
-      },
-      {
-        heading: 'Måltidsförslag',
-        lines: [
-          'Frukost: äggröra + havregröt + bär, eller skyr + nötter + blåbär.',
-          'Lunch: lax/kyckling + quinoa/potatis + stor sallad + olivolja.',
-          'Middag: nötfärs/fisk + grönsaker + linser.',
-        ],
-        evidence:
-          'Protein 1,6–2,2 g/kg/dag maximerar muskelproteinsyntes och mättnad (Morton 2018).',
-      },
-      {
-        heading: 'Inköpslista (ca-priser)',
-        lines: [
-          'Lax 400 g — 89 kr',
-          'Kycklingfilé 1 kg — 99 kr',
-          'Ägg 18-pack — 49 kr',
-          'Havregryn 1,5 kg — 25 kr',
-          'Blåbär frysta 1 kg — 39 kr',
-          'Skyr 1 kg — 32 kr',
-          'Quinoa 500 g — 35 kr',
-          'Olivolja 500 ml — 69 kr',
-          'Spenat/sallad — 25 kr',
-          'Blandade nötter 500 g — 59 kr',
-        ],
-        evidence:
-          'Baslivsmedel i botten håller både budget och näringskvalitet stabila vecka efter vecka.',
-      },
+    id: 'standard',
+    label: 'Standard',
+    price: 'ca 95-140 kr/dag',
+    focus: 'Bättre variation och återhämtning',
+    items: [
+      'Lax eller makrill 2-3 gånger/vecka',
+      'Kyckling, kalkon, tofu, bönor och grekisk yoghurt',
+      'Quinoa, surdegsbröd, sötpotatis och havreris',
+      'Avokado, olivolja, citrus, bär och bladgrönt',
     ],
   },
   {
-    id: 'somn',
-    title: 'Sömn',
-    blocks: [
-      {
-        heading: 'Sömnfönstret',
-        lines: [
-          'Mål 7–9 timmar. Fast läggtid — samma tid även i helgen.',
-          'Dagsljus inom 30 min efter uppvaknande.',
-          'Dämpa ljuset 2 timmar innan sömn; koffeinstopp 10 timmar innan.',
-          'Svalt och mörkt sovrum, ca 18 °C.',
-        ],
-        evidence:
-          'Morgonljus tidigarelägger dygnsrytmen och förbättrar insomningen samma kväll (Czeisler).',
-      },
-    ],
-  },
-  {
-    id: 'tillskott',
-    title: 'Tillskott',
-    blocks: [
-      {
-        heading: 'Dagligt stack',
-        lines: [
-          'Kreatin 5 g — kognitivt och muskulärt, ta när som helst, varje dag.',
-          'Omega-3 2 kaps med mat — EPA/DHA, hjärna och hjärta.',
-          'D3 2500 IE — särskilt oktober–mars i Sverige.',
-          'Magnesium 2 kaps kväll — sömn och muskelavslappning.',
-        ],
-        evidence:
-          'Kreatin 3–5 g/dag förbättrar både styrka och arbetsminne, särskilt vid sömnbrist (Avgerinos 2018).',
-      },
-    ],
-  },
-  {
-    id: 'mal',
-    title: 'Mål & Checkpoints',
-    blocks: [
-      {
-        heading: '12-veckorsplanen',
-        lines: [
-          'V1–4 Etablera rutin: logga dagligen, träffa passmål, håll sömnfönstret.',
-          'V4 checkpoint: vilopuls ↓ 2–4 slag, energi-snitt upp.',
-          'V5–8 Öka intensitet: +1 intervallpass, höj styrkevolymen.',
-          'V8 checkpoint: klarhet-snitt ≥ 7, streak ≥ 14 dagar.',
-          'V9–12 Konsolidera: finslipa kost, förläng Zon 2.',
-          'V12 checkpoint: vilopuls ↓ 5+, energi & klarhet stabilt höga.',
-        ],
-        evidence:
-          'Det tar ~8 veckor regelbunden kondition för mätbar sänkning av vilopuls och bättre HRV (Buchheit 2013).',
-      },
+    id: 'elite',
+    label: 'Elite',
+    price: 'ca 150-220 kr/dag',
+    focus: 'Precision runt pass och mental output',
+    items: [
+      'Färsk fisk, magert nötkött, ägg, skaldjur och kvalitetsmejeri',
+      'Rödbetsjuice eller nitrat-rika grönsaker inför hårda pass',
+      'Extra bär, granatäpple, valnötter och mörk choklad 70%+',
+      'Elektrolyter, bra kaffe/te och råvaror för meal prep',
     ],
   },
 ]
+
+export const MEAL_PLANS = [
+  {
+    id: 'morgon',
+    title: 'Morgon',
+    timing: '60-120 min före jobb eller pass',
+    recipe: 'Äggröra med spenat, havregröt, blåbär och yoghurt.',
+    budget: 'Budget: ägg + havre + frysta bär.',
+    goal: 'Stabil energi, protein tidigt och långsamma kolhydrater.',
+  },
+  {
+    id: 'snack',
+    title: 'Snack',
+    timing: 'När fokus börjar falla',
+    recipe: 'Skyr/kvarg med banan, kanel och nötter.',
+    budget: 'Budget: kvarg + banan + jordnötssmör.',
+    goal: 'Mättnad utan sockerkrasch.',
+  },
+  {
+    id: 'lunch',
+    title: 'Lunch',
+    timing: 'Mitt på dagen, gärna följt av 10 min promenad',
+    recipe: 'Lax eller kyckling, quinoa/potatis, stor sallad, olivolja och citron.',
+    budget: 'Budget: kyckling/linser + potatis + fryst broccoli.',
+    goal: 'Jämn eftermiddag genom protein och grönt före kolhydrater.',
+  },
+  {
+    id: 'kvall',
+    title: 'Kvällsmåltid',
+    timing: '2-3 timmar före sömn',
+    recipe: 'Kyckling, sötpotatis, broccoli och tzatziki eller tofu med ris och grönsaker.',
+    budget: 'Budget: ägg/linser + ris + rotfrukter.',
+    goal: 'Återhämtning utan tung mage vid läggdags.',
+  },
+]
+
+export const MEAL_TIMING = [
+  {
+    id: 'morgon',
+    start: 6.5,
+    end: 9.5,
+    title: 'Morgonbas',
+    cue: 'Protein + långsam kolhydrat',
+    body: 'Stabil frukost när dagen kräver fokus eller ett tidigt pass.',
+  },
+  {
+    id: 'lunch',
+    start: 11,
+    end: 13.5,
+    title: 'Lunchfönster',
+    cue: 'Protein och grönt först',
+    body: 'Bygg eftermiddagen med protein, grönsaker och kolhydrater efter belastning.',
+  },
+  {
+    id: 'snack',
+    start: 15,
+    end: 17.5,
+    title: 'Fokus-snack',
+    cue: 'Litet, proteinrikt, lätt',
+    body: 'Använd snack före hårt pass eller när koncentrationen börjar tappa.',
+  },
+  {
+    id: 'kvall',
+    start: 18,
+    end: 20.5,
+    title: 'Kvällsmål',
+    cue: 'Återhämtning utan tung mage',
+    body: 'Lägg sista större målet 2-3 timmar före sömn när det är möjligt.',
+  },
+]
+
+export const MEAL_IDEAS = [
+  {
+    id: 'morgon',
+    time: '06:30-09:30',
+    title: 'Morgon',
+    goal: 'Starta dagen med protein, vätska och långsamma kolhydrater.',
+    ideas: [
+      'Havregröt, blåbär, grekisk yoghurt och valnötter',
+      'Ägg, rågbröd, spenat och frukt',
+      'Skyr/kvarg, banan, kanel och nötter',
+      'Smoothie med yoghurt, bär, havre och kreatin',
+    ],
+  },
+  {
+    id: 'lunch',
+    time: '11:00-13:30',
+    title: 'Lunch',
+    goal: 'Håll eftermiddagen stabil: protein och grönt först, kolhydrat efter behov.',
+    ideas: [
+      'Kyckling, potatis, broccoli, olivolja och citron',
+      'Lax, ris, bladgrönt och avokado',
+      'Linser/bönor, quinoa, feta och grönsaker',
+      'Tonfisk, fullkornspasta, tomat, spenat och olivolja',
+    ],
+  },
+  {
+    id: 'snack',
+    time: '15:00-17:30',
+    title: 'Snack',
+    goal: 'Litet stöd inför pass eller mental dip utan tung mage.',
+    ideas: [
+      'Kvarg/skyr med banan',
+      'Riskakor eller bröd med jordnötssmör',
+      'Kokt ägg, frukt och vatten',
+      'Kaffe/te tidigt nog för att inte störa sömn',
+    ],
+  },
+  {
+    id: 'kvall',
+    time: '18:00-20:30',
+    title: 'Kväll',
+    goal: 'Återhämtning och sömn: protein, mikronäring och lagom energi.',
+    ideas: [
+      'Tofu eller kyckling med ris och grönsaker',
+      'Omelett med potatis och sallad',
+      'Makrill/lax, rotfrukter och gröna blad',
+      'Keso/kvarg med bär om middagen blev lätt',
+    ],
+  },
+]
+
+export const SHOPPING_GUIDE = {
+  budget: [
+    {
+      category: 'Proteinbas',
+      why: 'Billigt protein gör målet 1,6-2,2 g/kg möjligt utan dyr specialmat.',
+      items: ['Ägg', 'Kvarg/skyr', 'Tonfisk på burk', 'Fryst kyckling', 'Linser och bönor', 'Keso'],
+    },
+    {
+      category: 'Uthållighetskolhydrater',
+      why: 'Låg kostnad, hög nytta runt löpning, sport och intervaller.',
+      items: ['Havregryn', 'Potatis', 'Ris', 'Fullkornspasta', 'Banan', 'Rågbröd'],
+    },
+    {
+      category: 'Mikronäring och fiber',
+      why: 'Fiber, kalium, folat och polyfenoler stödjer energi, mättnad och återhämtning.',
+      items: ['Fryst broccoli', 'Spenat', 'Morötter', 'Kål', 'Frysta blåbär', 'Äpplen'],
+    },
+    {
+      category: 'Fett och hjärna',
+      why: 'Prisvärda fettkällor som gör måltider mer stabila och näringstäta.',
+      items: ['Rapsolja', 'Jordnötssmör', 'Solrosfrön', 'Makrill i tomat', 'Nötmix budget'],
+    },
+    {
+      category: 'Passdetaljer',
+      why: 'Enkla verktyg för vätska, salt och snabb energi när passen blir längre.',
+      items: ['Salt', 'Mineralvatten', 'Russin', 'Honung', 'Sportdryckspulver vid behov'],
+    },
+  ],
+  standard: [
+    {
+      category: 'Proteinbas',
+      why: 'Mer variation gör det lättare att hålla rutinen hela veckan.',
+      items: ['Kycklingfilé', 'Lax/makrill', 'Grekisk yoghurt', 'Kalkon', 'Tofu/tempeh', 'Ägg'],
+    },
+    {
+      category: 'Uthållighetskolhydrater',
+      why: 'Kolhydrater periodiseras efter belastning: mer nära hårda pass, mindre på vilodag.',
+      items: ['Sötpotatis', 'Quinoa', 'Havreris', 'Surdegsbröd', 'Banan', 'Bär'],
+    },
+    {
+      category: 'Mikronäring och färg',
+      why: 'Färgstarka växter ökar chansen att få polyfenoler, nitrat och antioxidanter.',
+      items: ['Ruccola', 'Spenat', 'Broccoli', 'Paprika', 'Citrus', 'Granatäpple'],
+    },
+    {
+      category: 'Fettkvalitet',
+      why: 'Medelhavslik bas med olivolja, fisk och nötter passar både hjärna och hjärta.',
+      items: ['Olivolja', 'Avokado', 'Valnötter', 'Chiafrön', 'Fet fisk', 'Mörk choklad 70%+'],
+    },
+    {
+      category: 'Passdetaljer',
+      why: 'Bra att ha hemma när träningen blir längre, svettigare eller mer intensiv.',
+      items: ['Elektrolyter', 'Rödbetsjuice', 'Kaffe', 'Dadlar', 'Riskakor', 'Vassle eller extra kvarg'],
+    },
+  ],
+  elite: [
+    {
+      category: 'Proteinbas',
+      why: 'Hög kvalitet och lätt meal prep när träning och mental output prioriteras.',
+      items: ['Färsk lax', 'Skaldjur', 'Magert nötkött', 'Ekologiska ägg', 'Kyckling/kalkon', 'Proteinrikt mejeri'],
+    },
+    {
+      category: 'Uthållighetskolhydrater',
+      why: 'Snabbt justerbar energi runt nyckelpass och längre pass.',
+      items: ['Jasminris', 'Sötpotatis', 'Surdegsbröd', 'Havre', 'Sportdryck', 'Mogen banan'],
+    },
+    {
+      category: 'Nitrat och polyfenoler',
+      why: 'Råvaror med möjlig prestations- och återhämtningsnytta, särskilt inför hårda pass.',
+      items: ['Rödbetsjuice', 'Ruccola', 'Spenat', 'Blåbär', 'Granatäpple', 'Kakao/nibs'],
+    },
+    {
+      category: 'Hjärna och återhämtning',
+      why: 'Täcker fettkvalitet, mineraler och praktisk återhämtning utan att göra kosten komplicerad.',
+      items: ['Extra virgin olivolja', 'Valnötter', 'Pumpakärnor', 'Avokado', 'Kefir', 'Mörk choklad 85%'],
+    },
+    {
+      category: 'Precision',
+      why: 'Små saker som gör rutinen lätt att utföra även under belastade veckor.',
+      items: ['Elektrolytmix', 'Kreatin', 'Koffeinfritt kvällste', 'Meal prep-lådor', 'Bra salt', 'Frysta bär premium'],
+    },
+  ],
+}
+
+export const NUTRITION_RULES = [
+  {
+    title: 'Proteinmål',
+    metric: '1,6-2,2 g/kg/dag',
+    body: 'Använd nedre delen som bas och öka vid hård styrka, kaloriunderskott eller hög träningsvolym.',
+  },
+  {
+    title: 'Kolhydrater runt pass',
+    metric: 'mer före hårda pass',
+    body: 'Lägg stärkelse och frukt närmast intervaller, längre löpning eller sport. Minska bara på vilodagar.',
+  },
+  {
+    title: 'Fettkvalitet',
+    metric: 'olivolja, fisk, nötter',
+    body: 'Bygg måltider med Medelhavsliknande bas: fisk, baljväxter, grönt, fullkorn och omättade fetter.',
+  },
+  {
+    title: 'Vätska och salt',
+    metric: 'ljus urin, stabil puls',
+    body: 'Vid svettiga pass: vatten plus salt/elektrolyter. Följ törst, kroppsvikt efter pass och morgonpuls.',
+  },
+]
+
+export const SLEEP_PROTOCOL = [
+  {
+    title: 'Morgonankare',
+    body: 'Dagsljus inom 30 minuter efter uppvaknande. Det gör kvällens sömntryck lättare att tajma.',
+  },
+  {
+    title: 'Koffeinstopp',
+    body: 'Sätt personlig cutoff 8-10 timmar före läggdags om sömnkvaliteten eller vilopulsen påverkas.',
+  },
+  {
+    title: 'Nedvarvning',
+    body: 'Sänk ljus, värme och skärmtempo sista timmen. Förbered morgondagens första steg.',
+  },
+  {
+    title: 'Rum',
+    body: 'Mörkt, tyst och svalt. Sikta på samma lägg- och uppstigningstid även när veckan är rörig.',
+  },
+]
+
+export const EVIDENCE = [
+  {
+    id: 'protein',
+    area: 'Näring',
+    title: 'Protein stödjer styrka och fettfri massa',
+    finding: 'Meta-analys: protein tillsammans med styrketräning förbättrar styrka och fettfri massa; effekten planar ut runt 1,6 g/kg/dag.',
+    takeaway: 'Använd 1,6-2,2 g/kg/dag som praktiskt spann när träning och återhämtning är prioriterat.',
+    strength: 'Meta-analys',
+    source: 'Morton et al., 2018',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/28698222/',
+  },
+  {
+    id: 'protein-issn',
+    area: 'Näring',
+    title: 'Aktiva personer behöver mer protein än stillasittande',
+    finding: 'ISSN-position stand anger att 1,4-2,0 g/kg/dag räcker för de flesta tränande individer.',
+    takeaway: 'Låt proteinmålet följa kroppsvikt och träningsbelastning, inte ett fast gramvärde.',
+    strength: 'Position stand',
+    source: 'Jäger et al., 2017',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/28642676/',
+  },
+  {
+    id: 'carbs-endurance',
+    area: 'Uthållighet',
+    title: 'Kolhydrater ska periodiseras runt belastning',
+    finding: 'Sports nutrition-guidelines stödjer högre kolhydrattillgänglighet inför och under längre eller hårdare pass.',
+    takeaway: 'Lägg ris, potatis, havre, frukt eller sportdryck nära intervaller och längre uthållighetspass.',
+    strength: 'Review/guideline',
+    source: 'Burke et al., 2011',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/21660838/',
+  },
+  {
+    id: 'nutrition-performance',
+    area: 'Kost',
+    title: 'Näring, vätska och timing påverkar prestation',
+    finding: 'ACSM/AND/DC-position stand sammanfattar evidens för energi, vätska, makron och timing i atletisk prestation.',
+    takeaway: 'Se mat som träningsinfrastruktur: energi först, sedan protein, kolhydrattiming och vätska.',
+    strength: 'Position stand',
+    source: 'Thomas et al., 2016',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/26891166/',
+  },
+  {
+    id: 'nutrient-timing',
+    area: 'Kost',
+    title: 'Timing hjälper mest runt belastning',
+    finding: 'ISSN-position stand: måltidstiming är mest relevant när energi, protein och kolhydrater planeras runt träning och återhämtning.',
+    takeaway: 'Använd matpåminnelser som friktionsfri struktur: protein i basmålen och kolhydrater närmast hårda pass.',
+    strength: 'Position stand',
+    source: 'Kerksick et al., 2017',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/28919842/',
+  },
+  {
+    id: 'meal-frequency',
+    area: 'Kost',
+    title: 'Måltidsfrekvens är mest ett praktiskt verktyg',
+    finding: 'ISSN-position stand: fler måltider verkar inte magiskt höja förbränning, men kan hjälpa aptit, mättnad och tillräckligt energiintag hos aktiva.',
+    takeaway: 'Använd 3-4 matfönster för struktur, inte som dogm. Total energi, protein och träning styr mest.',
+    strength: 'Position stand',
+    source: 'La Bounty et al., 2011',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/21410984/',
+  },
+  {
+    id: 'mind-diet',
+    area: 'Mental klarhet',
+    title: 'MIND-kost är lovande för kognitiv hälsa',
+    finding: 'Systematisk översikt: högre följsamhet till MIND-kost kopplas till bättre global kognition, minne och exekutiv funktion.',
+    takeaway: 'Köp bladgrönt, bär, fullkorn, bönor, nötter, olivolja och fisk oftare än snabbmat och sötsaker.',
+    strength: 'Systematisk översikt',
+    source: 'PubMed, 2025',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/40644764/',
+  },
+  {
+    id: 'mediterranean-meta-2025',
+    area: 'Mental klarhet',
+    title: 'Medelhavskost kopplas till lägre kognitiv risk',
+    finding: 'Meta-analys: högre följsamhet till Medelhavskost var kopplad till lägre risk för åldersrelaterade kognitiva tillstånd.',
+    takeaway: 'Basera inköp på fisk, baljväxter, grönsaker, olivolja, nötter, bär och fullkorn som standard.',
+    strength: 'Meta-analys',
+    source: 'PubMed, 2025',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/39797935/',
+  },
+  {
+    id: 'food-order',
+    area: 'Kost',
+    title: 'Protein och grönsaker före kolhydrater',
+    finding: 'Att äta protein/grönt före kolhydrater gav lägre postprandialt glukos- och insulinsvar i en klinisk studie.',
+    takeaway: 'Behåll lunchregeln: protein och grönt först, stärkelse sist, särskilt vid eftermiddagsdippar.',
+    strength: 'Klinisk studie',
+    source: 'Shukla et al., 2015',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/26106234/',
+  },
+  {
+    id: 'hiit',
+    area: 'Uthållighet',
+    title: '4x4-intervaller höjer VO2max effektivt',
+    finding: 'Högintensiva aeroba intervaller ökade VO2max mer än moderat kontinuerlig träning i åtta veckor.',
+    takeaway: 'Ett hårt intervallpass per vecka kan räcka långt när basen av lugn träning finns.',
+    strength: 'Kontrollerad träningsstudie',
+    source: 'Helgerud et al., 2007',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/17414804/',
+  },
+  {
+    id: 'exercise-cognition',
+    area: 'Mental klarhet',
+    title: 'Träning förbättrar kognition brett',
+    finding: 'En umbrella review av RCT-översikter fann stöd för att träning gynnar generell kognition, minne och exekutiv funktion.',
+    takeaway: 'Koppla mental klarhet till konsekvent rörelse, inte bara kosttillskott eller koffein.',
+    strength: 'Umbrella review',
+    source: 'Owen et al., 2025',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/40049759/',
+  },
+  {
+    id: 'aerobic-executive',
+    area: 'Mental klarhet',
+    title: 'Aerob träning stödjer exekutiv funktion',
+    finding: 'Meta-analys: aerob träning förbättrade kognitiv flexibilitet, arbetsminne och inhibition hos friska medelålders/äldre vuxna.',
+    takeaway: 'Zon 2 och intervaller ska ses som hjärnträning lika mycket som konditionsträning.',
+    strength: 'Meta-analys',
+    source: 'Zhang et al., 2024',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/39326271/',
+  },
+  {
+    id: 'mediterranean',
+    area: 'Mental klarhet',
+    title: 'Medelhavskost kopplas till kognitiv hälsa',
+    finding: 'Systematiska översikter kopplar högre följsamhet till Medelhavskost med bättre kognitiv hälsa och lägre risk för kognitiv svikt.',
+    takeaway: 'Prioritera fisk, baljväxter, fullkorn, grönsaker, bär, nötter och olivolja som standardbas.',
+    strength: 'Systematisk översikt',
+    source: 'Liu et al., 2022',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/35967772/',
+  },
+  {
+    id: 'nitrate',
+    area: 'Uthållighet',
+    title: 'Nitrat kan ge liten prestationsfördel',
+    finding: 'Systematisk översikt/meta-analys visar små förbättringar i uthållighetsprestation med nitrat, särskilt hos icke-elit till vältränade.',
+    takeaway: 'Rödbeta, ruccola och spenat är rimliga elite-val inför hårda pass, men effekten är individuell.',
+    strength: 'Meta-analys',
+    source: 'McMahon et al., 2017',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/27600147/',
+  },
+  {
+    id: 'nitrate-endurance',
+    area: 'Uthållighet',
+    title: 'Nitrat verkar bäst på kapacitetstest',
+    finding: 'Meta-analys: nitrat hade tydligare effekt på time-to-exhaustion än på rena prestationstester.',
+    takeaway: 'Använd nitrat som ett testbart verktyg, inte som en garanti för snabbare tid.',
+    strength: 'Meta-analys',
+    source: 'Senefeld et al., 2020',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/34243756/',
+  },
+  {
+    id: 'creatine',
+    area: 'Mental klarhet',
+    title: 'Kreatin kan stödja kognitiv funktion',
+    finding: 'Systematisk översikt/meta-analys antyder positiva effekter på kognitiva utfall hos vuxna, men effekten varierar mellan grupper.',
+    takeaway: 'Behåll kreatin som lågfriktionsvana, särskilt vid hård träning, låg köttkonsumtion eller sömnbrist.',
+    strength: 'Meta-analys',
+    source: 'Xu et al., 2024',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/39070254/',
+  },
+  {
+    id: 'creatine-memory',
+    area: 'Mental klarhet',
+    title: 'Kreatin kan gynna minne hos vissa grupper',
+    finding: 'Meta-analys av friska individer visade förbättrat minnesutfall, med starkare effekt hos äldre vuxna.',
+    takeaway: 'Räkna med modest effekt och följ egen klarhet/sömn i appen i stället för att överdosera.',
+    strength: 'Systematisk översikt/meta-analys',
+    source: 'Prokopidis et al., 2022',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/35984306/',
+  },
+  {
+    id: 'omega3-mixed',
+    area: 'Näring',
+    title: 'Omega-3 för kognition är blandat',
+    finding: 'Cochraneöversikt fann liten eller ingen effekt av långkedjig omega-3 på nya neurokognitiva utfall i vuxna populationer.',
+    takeaway: 'Ät fet fisk för helheten; tillskott är rimligast vid lågt intag, inte som ensam klarhetsstrategi.',
+    strength: 'Cochrane review',
+    source: 'Abdelhamid et al., 2020',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/32305302/',
+  },
+  {
+    id: 'caffeine-performance',
+    area: 'Uthållighet',
+    title: 'Koffein kan höja uthållighet',
+    finding: 'ISSN-position stand: koffein förbättrar ofta prestation vid 3-6 mg/kg, men responsen varierar.',
+    takeaway: 'Använd koffein strategiskt inför nyckelpass, inte sent eller slentrianmässigt varje eftermiddag.',
+    strength: 'Position stand',
+    source: 'Guest et al., 2021',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/33388079/',
+  },
+  {
+    id: 'caffeine',
+    area: 'Sömn',
+    title: 'Koffein sent stör sömn',
+    finding: 'Koffein även sex timmar före läggdags kan minska total sömntid; känslighet varierar.',
+    takeaway: 'Koffeinstopp 8-10 timmar före läggtid är rimligt när mental klarhet nästa dag är målet.',
+    strength: 'Kontrollerad studie',
+    source: 'Drake et al., 2013',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/24235903/',
+  },
+  {
+    id: 'hydration-cognition',
+    area: 'Mental klarhet',
+    title: 'Dehydrering försämrar uppmärksamhet',
+    finding: 'Meta-analys: dehydrering försämrade kognitiv prestation, särskilt uppmärksamhet, exekutiv funktion och motorisk koordination vid >2% kroppsviktsförlust.',
+    takeaway: 'Logga vätska indirekt via morgonpuls, törst, urinmörkhet och pass där mycket svett förloras.',
+    strength: 'Meta-analys',
+    source: 'Wittbrodt & Millard-Stafford, 2018',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/29933347/',
+  },
+  {
+    id: 'rehydration-performance',
+    area: 'Uthållighet',
+    title: 'Återvätskning hjälper kontinuerlig prestation',
+    finding: 'Systematisk översikt/meta-analys: vätskeintag efter dehydrering förbättrade kontinuerlig träningsprestation, särskilt i värme/längre duration.',
+    takeaway: 'Efter svettiga pass: ersätt vätska och salt innan nästa kognitiva eller fysiska toppinsats.',
+    strength: 'Systematisk översikt/meta-analys',
+    source: 'McCartney et al., 2017',
+    url: 'https://link.springer.com/article/10.1186/s40798-017-0079-y',
+  },
+  {
+    id: 'light',
+    area: 'Sömn',
+    title: 'Morgonljus hjälper dygnsrytm',
+    finding: 'Ljus är en central regulator av dygnsrytm, sömn och humör; morgonljus kan tidigarelägga rytmen.',
+    takeaway: 'Gör morgonljus till ankaret för både sömnfönster och dagsklarhet.',
+    strength: 'Översikt',
+    source: 'Blume et al., 2019',
+    url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6751071/',
+  },
+  {
+    id: 'sleep-interventions-athletes',
+    area: 'Sömn',
+    title: 'Sömnförlängning är mest lovande för prestation',
+    finding: 'Systematisk översikt: längre nattsömn eller tupplur var de mest effektiva sömninterventionerna för fysisk och/eller kognitiv prestation.',
+    takeaway: 'Vid tung träningsperiod: prioritera mer tid i säng före nya kosttillskott.',
+    strength: 'Systematisk översikt',
+    source: 'Cunha et al., 2023',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/37462808/',
+  },
+  {
+    id: 'sleep-extension',
+    area: 'Sömn',
+    title: 'Mer sömn förbättrade basketprestation',
+    finding: 'Interventionsstudie på collegebasketspelare: sömnförlängning förbättrade bland annat sprint, skottprecision, reaktionstid, trötthet och humör.',
+    takeaway: 'Sätt sömn som prestationspass: fler timmar kan ge mätbar output när du redan tränar hårt.',
+    strength: 'Interventionsstudie',
+    source: 'Mah et al., 2011',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/21731144/',
+  },
+  {
+    id: 'sleep-restriction',
+    area: 'Sömn',
+    title: 'En kort natt räcker för sämre uppmärksamhet',
+    finding: 'Systematisk översikt/meta-analys: en natt med sömnrestriktion ökade sömnighet och försämrade sustained attention.',
+    takeaway: 'Klarhetspoängen i appen ska tolkas ihop med föregående natts sömn, inte isolerat.',
+    strength: 'Systematisk översikt/meta-analys',
+    source: 'Rossa et al., 2024',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/38759474/',
+  },
+  {
+    id: 'sleep-duration-cognition',
+    area: 'Mental klarhet',
+    title: 'Extrema sömnlängder kopplas till kognitiv nedgång',
+    finding: 'Pooled cohort-studie: både mycket kort och mycket lång sömn var kopplat till snabbare global kognitiv nedgång jämfört med cirka 7 timmar.',
+    takeaway: 'Sikta på stabilt sömnfönster och följ avvikande nätter i relation till klarhet och vilopuls.',
+    strength: 'Pooled cohort',
+    source: 'Ma et al., 2020',
+    url: 'https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2770743',
+  },
+  {
+    id: 'acute-sleep-loss-performance',
+    area: 'Sömn',
+    title: 'Sömnbrist försämrar fysisk prestation',
+    finding: 'Systematisk översikt/meta-analys: sömnbrist, sömnrestriktion och sen restriktion försämrade träningsprestation.',
+    takeaway: 'Efter dålig natt: välj teknik, zon 2 eller återhämtning framför maxintervaller.',
+    strength: 'Systematisk översikt/meta-analys',
+    source: 'Craven et al., 2022',
+    url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC9584849/',
+  },
+  {
+    id: 'bmi-screening',
+    area: 'Profil',
+    title: 'BMI är screening, inte diagnos',
+    finding: 'CDC beskriver BMI som vikt relativt längd och betonar att det ska bedömas tillsammans med andra faktorer.',
+    takeaway: 'Visa BMI, men följ också midja, vilopuls, ork, sömn och prestation.',
+    strength: 'Myndighetskälla',
+    source: 'CDC, 2023',
+    url: 'https://www.cdc.gov/bmi/adult-calculator/bmi-categories.html',
+  },
+  {
+    id: 'bmi-limitations',
+    area: 'Profil',
+    title: 'BMI kan missvisa hos vältränade',
+    finding: 'Översikt: hög muskelmassa kan göra BMI missvisande, särskilt hos atletiska personer.',
+    takeaway: 'Tolka BMI försiktigt i en elite-PT-app; kroppssammansättning och prestationsmarkörer väger tungt.',
+    strength: 'Översikt',
+    source: 'Wu et al., 2024',
+    url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11204233/',
+  },
+]
+
+export const EVIDENCE_GROUPS = {
+  overview: [
+    'hiit',
+    'exercise-cognition',
+    'aerobic-executive',
+    'sleep-interventions-athletes',
+    'protein',
+    'hydration-cognition',
+    'caffeine-performance',
+    'bmi-screening',
+  ],
+  food: [
+    'nutrient-timing',
+    'meal-frequency',
+    'food-order',
+    'nutrition-performance',
+    'mind-diet',
+    'mediterranean-meta-2025',
+    'mediterranean',
+    'carbs-endurance',
+    'protein',
+    'hydration-cognition',
+    'nitrate',
+    'omega3-mixed',
+  ],
+  nutrition: [
+    'nutrient-timing',
+    'meal-frequency',
+    'protein-issn',
+    'protein',
+    'carbs-endurance',
+    'nutrition-performance',
+    'nitrate',
+    'nitrate-endurance',
+    'caffeine-performance',
+    'creatine',
+    'creatine-memory',
+    'omega3-mixed',
+    'rehydration-performance',
+  ],
+  sleep: [
+    'caffeine',
+    'sleep-interventions-athletes',
+    'sleep-extension',
+    'sleep-restriction',
+    'sleep-duration-cognition',
+    'acute-sleep-loss-performance',
+    'light',
+  ],
+  profile: ['bmi-screening', 'bmi-limitations'],
+}
